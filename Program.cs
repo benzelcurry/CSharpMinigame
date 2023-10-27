@@ -27,7 +27,10 @@ while (!shouldExit)
 {
     if (TerminalResized())
     {
-        shouldExit = true;
+        Console.Clear();
+        Console.WriteLine("Console was resized. Program exiting.");
+        Thread.Sleep(3000);
+        Console.Clear();
         break;
     }
     Move();
@@ -89,28 +92,28 @@ void Move()
 		case ConsoleKey.RightArrow: 
             playerX++; 
             break;
+        case ConsoleKey.Escape:
+            shouldExit = true;
+            break;
 		default:    
             shouldExit = true; 
             break;
     }
 
-    if (!TerminalResized())
+    // Clear the characters at the previous position
+    Console.SetCursorPosition(lastX, lastY);
+    for (int i = 0; i < player.Length; i++) 
     {
-        // Clear the characters at the previous position
-        Console.SetCursorPosition(lastX, lastY);
-        for (int i = 0; i < player.Length; i++) 
-        {
-            Console.Write(" ");
-        }
-
-        // Keep player position within the bounds of the Terminal window
-        playerX = (playerX < 0) ? 0 : (playerX >= width ? width : playerX);
-        playerY = (playerY < 0) ? 0 : (playerY >= height ? height : playerY);
-
-        // Draw the player at the new location
-        Console.SetCursorPosition(playerX, playerY);
-        Console.Write(player);
+        Console.Write(" ");
     }
+
+    // Keep player position within the bounds of the Terminal window
+    playerX = (playerX < 0) ? 0 : (playerX >= width ? width : playerX);
+    playerY = (playerY < 0) ? 0 : (playerY >= height ? height : playerY);
+
+    // Draw the player at the new location
+    Console.SetCursorPosition(playerX, playerY);
+    Console.Write(player);
 }
 
 // Clears the console, displays the food and player
