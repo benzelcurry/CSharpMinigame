@@ -1,6 +1,4 @@
-﻿using System;
-
-Random random = new Random();
+﻿Random random = new Random();
 Console.CursorVisible = false;
 int height = Console.WindowHeight - 1;
 int width = Console.WindowWidth - 5;
@@ -27,6 +25,11 @@ int food = 0;
 InitializeGame();
 while (!shouldExit) 
 {
+    if (TerminalResized())
+    {
+        shouldExit = true;
+        break;
+    }
     Move();
 }
 
@@ -91,20 +94,23 @@ void Move()
             break;
     }
 
-    // Clear the characters at the previous position
-    Console.SetCursorPosition(lastX, lastY);
-    for (int i = 0; i < player.Length; i++) 
+    if (!TerminalResized())
     {
-        Console.Write(" ");
+        // Clear the characters at the previous position
+        Console.SetCursorPosition(lastX, lastY);
+        for (int i = 0; i < player.Length; i++) 
+        {
+            Console.Write(" ");
+        }
+
+        // Keep player position within the bounds of the Terminal window
+        playerX = (playerX < 0) ? 0 : (playerX >= width ? width : playerX);
+        playerY = (playerY < 0) ? 0 : (playerY >= height ? height : playerY);
+
+        // Draw the player at the new location
+        Console.SetCursorPosition(playerX, playerY);
+        Console.Write(player);
     }
-
-    // Keep player position within the bounds of the Terminal window
-    playerX = (playerX < 0) ? 0 : (playerX >= width ? width : playerX);
-    playerY = (playerY < 0) ? 0 : (playerY >= height ? height : playerY);
-
-    // Draw the player at the new location
-    Console.SetCursorPosition(playerX, playerY);
-    Console.Write(player);
 }
 
 // Clears the console, displays the food and player
