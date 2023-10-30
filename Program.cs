@@ -33,6 +33,10 @@ while (!shouldExit)
         Console.Clear();
         break;
     }
+
+    if (HealthState() == 3)
+        FreezePlayer();
+        
     Move();
 }
 
@@ -49,6 +53,17 @@ bool HasEaten()
         return true;
     else
         return false;
+}
+
+// Determine's the player's health state/speed
+int HealthState()
+{
+    if (player == states[0])
+        return 1;
+    else if (player == states[1])
+        return 2;
+    else
+        return 3;
 }
 
 // Displays random food at a random location
@@ -82,24 +97,30 @@ void FreezePlayer()
 }
 
 // Reads directional input from the Console and moves the player
-void Move(bool nondirectional = false) 
+void Move(bool nondirectional = false, bool speed = false) 
 {
     int lastX = playerX;
     int lastY = playerY;
+    int speedBoost;
+
+    if (speed)
+        speedBoost = (HealthState() == 1) ? 1 : 3;
+    else
+        speedBoost = 1;
     
     switch (Console.ReadKey(true).Key) 
     {
         case ConsoleKey.UpArrow:
-            playerY--; 
+            playerY -= 1 * speedBoost; 
             break;
 		case ConsoleKey.DownArrow: 
-            playerY++; 
+            playerY += 1 * speedBoost; 
             break;
 		case ConsoleKey.LeftArrow:  
-            playerX--; 
+            playerX -= 1 * speedBoost; 
             break;
 		case ConsoleKey.RightArrow: 
-            playerX++; 
+            playerX += 1 * speedBoost; 
             break;
         case ConsoleKey.Escape:
             shouldExit = true;
