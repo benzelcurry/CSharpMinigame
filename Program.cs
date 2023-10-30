@@ -42,6 +42,15 @@ bool TerminalResized()
     return height != Console.WindowHeight - 1 || width != Console.WindowWidth - 5;
 }
 
+// Determines if the player has eaten the food
+bool HasEaten()
+{
+    if (playerX == foodX && playerY == foodY)
+        return true;
+    else
+        return false;
+}
+
 // Displays random food at a random location
 void ShowFood() 
 {
@@ -96,7 +105,7 @@ void Move(bool nondirectional = false)
             shouldExit = true;
             break;
 		default:
-            if (nondirectional == true)    
+            if (nondirectional)    
                 shouldExit = true; 
             break;
     }
@@ -121,6 +130,12 @@ void Move(bool nondirectional = false)
         // Draw the player at the new location
         Console.SetCursorPosition(playerX, playerY);
         Console.Write(player);
+
+        if (HasEaten())
+        {
+            ChangePlayer();
+            ShowFood();
+        }
     }
 }
 
